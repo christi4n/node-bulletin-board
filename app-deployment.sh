@@ -5,13 +5,10 @@ KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
 CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
 
+echo
 echo "Check K8s status by querying the API"
 
 curl -H "Authorization: Bearer $KUBE_TOKEN" --cacert $CACERT $K8S/healthz
-
-echo "KUBE_TOKEN: $KUBE_TOKEN"
-
-sleep 20m
 
 sed -i "s~#{image}~$ARTIFACT_IMAGE~g" bulletin-board-deployment.json
 

@@ -1,11 +1,12 @@
 {
-  "apiVersion": "apps/v1beta2",
+  "apiVersion": "apps/v1",
   "kind": "Deployment",
   "metadata": {
     "labels": {
       "app": "bulletin-board"
     },
-    "name": "bulletin-board-deployment"
+    "name": "bulletin-board-deployment",
+    "": ""
   },
   "spec": {
     "replicas": 1,

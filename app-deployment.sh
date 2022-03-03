@@ -11,6 +11,8 @@ curl -H "Authorization: Bearer $KUBE_TOKEN" --cacert $CACERT $K8S/healthz
 
 echo "KUBE_TOKEN: $KUBE_TOKEN"
 
+sleep 20m
+
 sed -i "s~#{image}~$ARTIFACT_IMAGE~g" bulletin-board-deployment.json
 
 if [ -z $KUBE_TOKEN ]; then
@@ -27,20 +29,20 @@ echo
 echo "Namespace $NAMESPACE"
 
 status_code=$(curl -sSk -H "Authorization: Bearer $KUBE_TOKEN" --cacert $CACERT \
-    "https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT/apis/apps/v1beta2/namespaces/$NAMESPACE/deployments/bulletin-board-deployment" \
+    "https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT/apis/apps/v1/namespaces/$NAMESPACE/deployments/bulletin-board-deployment" \
     -X GET -o /dev/null -w "%{http_code}")
 
 if [ $status_code == 200 ]; then
   echo
   echo "Updating deployment"
   curl --fail -H 'Content-Type: application/strategic-merge-patch+json' -sSk -H "Authorization: Bearer $KUBE_TOKEN" --cacert $CACERT \
-    "https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT/apis/apps/v1beta2/namespaces/$NAMESPACE/deployments/bulletin-board-deployment" \
+    "https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT/apis/apps/v1/namespaces/$NAMESPACE/deployments/bulletin-board-deployment" \
     -X PATCH -d @bulletin-board-deployment.json
 else
  echo
  echo "Creating deployment"
  curl --fail -H 'Content-Type: application/json' -sSk -H "Authorization: Bearer $KUBE_TOKEN" --cacert $CACERT \
-    "https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT/apis/apps/v1beta2/namespaces/$NAMESPACE/deployments" \
+    "https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT/apis/apps/v1/namespaces/$NAMESPACE/deployments" \
     -X POST -d @bulletin-board-deployment.json
 fi
 

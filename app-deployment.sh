@@ -11,8 +11,6 @@ curl -H "Authorization: Bearer $KUBE_TOKEN" --cacert $CACERT $K8S/healthz
 
 echo "KUBE_TOKEN: $KUBE_TOKEN"
 
-sleep 5m
-
 sed -i "s~#{image}~$ARTIFACT_IMAGE~g" bulletin-board-deployment.json
 
 if [ -z $KUBE_TOKEN ]; then
